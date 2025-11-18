@@ -13,7 +13,7 @@ struct ContentView: View {
             Image(systemName: "globe")
                 .imageScale(.large)
                 .foregroundStyle(.tint)
-            Text("Hello, worl!d!")
+            Text("김연태의 싱글벙글 하루")
         }
         .padding()
     }
