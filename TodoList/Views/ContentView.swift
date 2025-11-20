@@ -8,17 +8,54 @@
 import SwiftUI
 
 struct ContentView: View {
+    @ObservedObject var viewModel = TodoViewModel()
+    @State private var newTodoTitle = ""
+    
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("김연태의 싱글벙글 하루")
+            HStack {
+                TextField("New Todo", text: $newTodoTitle)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                
+                // 최신 SwiftUI Button 문법
+                Button {
+                    guard !newTodoTitle.isEmpty else { return }
+                    viewModel.add(newTodoTitle)
+                    newTodoTitle = ""
+                } label: {
+                    Text("+")
+                        .font(.title2)
+                        .padding(6)
+                }
+                .buttonStyle(.borderedProminent)
+            }
+            .padding()
+            
+            List {
+                ForEach(viewModel.todos) { todo in
+                    HStack {
+                        Text(todo.title)
+                            .strikethrough(todo.checking) // isCompleted -> checking
+                        Spacer()
+                        Button {
+                            viewModel.toggle(todo)
+                        } label: {
+                            Text(todo.checking ? "Undo" : "Done")
+                        }
+                        .buttonStyle(.bordered)
+                    }
+                }
+                .onDelete { indexSet in
+                    indexSet.forEach { viewModel.remove(id: viewModel.todos[$0].id) }
+                }
+            }
         }
-        .padding()
     }
 }
 
-#Preview {
-    ContentView()
+// 최신 SwiftUI PreviewProvider 방식
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+    }
 }

@@ -22,6 +22,10 @@ class TodoViewModel: ObservableObject{
         }
     }
     
+    func remove(id: UUID) {
+        todos.removeAll(where: { $0.id == id })
+    }
+    
 }
 
 
